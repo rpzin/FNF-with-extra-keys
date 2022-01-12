@@ -10,6 +10,9 @@ import flixel.input.actions.FlxActionSet;
 import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
+import ui.Hitbox;
+import ui.FlxVirtualPad;
+import flixel.ui.FlxButton;
 
 #if (haxe >= "4.0.0")
 enum abstract Action(String) to String from String
@@ -722,6 +725,160 @@ class Controls extends FlxActionSet
 		setKeyboardScheme(scheme, false);
 	}
 	#end
+
+	public var trackedinputs:Array<FlxActionInput> = [];
+
+	public function addbutton(action:FlxActionDigital, button:FlxButton, state:FlxInputState) {
+		var input = new FlxActionInputDigitalIFlxInput(button, state);
+		trackedinputs.push(input);
+
+		action.add(input);
+		//action.addInput(button, state);
+	}
+
+	public function setHitBox(hitbox:Hitbox, ?Type:HitboxType) 
+	{
+	if (Type == null)
+		Type = DEFAULT;
+
+	switch(Type){
+	case ONE:
+		inline forEachBound(Control.N4, (action, state) -> addbutton(action, hitbox.k1, state));
+	case TWO:
+		inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, hitbox.k1, state));
+		inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, hitbox.k2, state));
+	case THREE:
+		inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, hitbox.k1, state));
+		inline forEachBound(Control.N4, (action, state) -> addbutton(action, hitbox.k2, state));
+		inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, hitbox.k3, state));					
+	case FIVE:
+		inline forEachBound(Control.UP, (action, state) -> addbutton(action, hitbox.k4, state));
+		inline forEachBound(Control.DOWN, (action, state) -> addbutton(action, hitbox.k2, state));
+		inline forEachBound(Control.N4, (action, state) -> addbutton(action, hitbox.k3, state));
+		inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, hitbox.k1, state));
+		inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, hitbox.k5, state));
+	case SIX:
+		inline forEachBound(Control.L1, (action, state) -> addbutton(action, hitbox.k1, state));
+		inline forEachBound(Control.U1, (action, state) -> addbutton(action, hitbox.k2, state));
+		inline forEachBound(Control.R1, (action, state) -> addbutton(action, hitbox.k3, state));
+		inline forEachBound(Control.L2, (action, state) -> addbutton(action, hitbox.k4, state));
+		inline forEachBound(Control.D1, (action, state) -> addbutton(action, hitbox.k5, state));
+		inline forEachBound(Control.R2, (action, state) -> addbutton(action, hitbox.k6, state));									
+	case SEVEN:	
+		inline forEachBound(Control.L1, (action, state) -> addbutton(action, hitbox.k1, state));
+		inline forEachBound(Control.U1, (action, state) -> addbutton(action, hitbox.k2, state));
+		inline forEachBound(Control.R1, (action, state) -> addbutton(action, hitbox.k3, state));
+		inline forEachBound(Control.N4, (action, state) -> addbutton(action, hitbox.k4, state));
+		inline forEachBound(Control.L2, (action, state) -> addbutton(action, hitbox.k5, state));
+		inline forEachBound(Control.D1, (action, state) -> addbutton(action, hitbox.k6, state));
+		inline forEachBound(Control.R2, (action, state) -> addbutton(action, hitbox.k7, state));
+	case EIGHT:
+		inline forEachBound(Control.N0, (action, state) -> addbutton(action, hitbox.k1, state));
+		inline forEachBound(Control.N1, (action, state) -> addbutton(action, hitbox.k2, state));
+		inline forEachBound(Control.N2, (action, state) -> addbutton(action, hitbox.k3, state));
+		inline forEachBound(Control.N3, (action, state) -> addbutton(action, hitbox.k4, state));
+		inline forEachBound(Control.N5, (action, state) -> addbutton(action, hitbox.k5, state));
+		inline forEachBound(Control.N6, (action, state) -> addbutton(action, hitbox.k6, state));
+		inline forEachBound(Control.N7, (action, state) -> addbutton(action, hitbox.k7, state));
+		inline forEachBound(Control.N8, (action, state) -> addbutton(action, hitbox.k8, state));					
+	case NINE:
+		inline forEachBound(Control.N0, (action, state) -> addbutton(action, hitbox.k1, state));
+		inline forEachBound(Control.N1, (action, state) -> addbutton(action, hitbox.k2, state));
+		inline forEachBound(Control.N2, (action, state) -> addbutton(action, hitbox.k3, state));
+		inline forEachBound(Control.N3, (action, state) -> addbutton(action, hitbox.k4, state));
+		inline forEachBound(Control.N4, (action, state) -> addbutton(action, hitbox.k5, state));
+		inline forEachBound(Control.N5, (action, state) -> addbutton(action, hitbox.k6, state));
+		inline forEachBound(Control.N6, (action, state) -> addbutton(action, hitbox.k7, state));
+		inline forEachBound(Control.N7, (action, state) -> addbutton(action, hitbox.k8, state));
+		inline forEachBound(Control.N8, (action, state) -> addbutton(action, hitbox.k9, state));											
+	case DEFAULT:	
+		inline forEachBound(Control.UP, (action, state) -> addbutton(action, hitbox.k3, state));
+		inline forEachBound(Control.DOWN, (action, state) -> addbutton(action, hitbox.k2, state));
+		inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, hitbox.k1, state));
+		inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, hitbox.k4, state));	
+	}
+	}
+
+
+	public function setVirtualPad(virtualPad:FlxVirtualPad, ?DPad:FlxDPadMode, ?Action:FlxActionMode) {
+		if (DPad == null)
+			DPad = NONE;
+		if (Action == null)
+			Action = NONE;
+
+		switch (DPad)
+		{
+			case UP_DOWN:
+				inline forEachBound(Control.UP, (action, state) -> addbutton(action, virtualPad.buttonUp, state));
+				inline forEachBound(Control.DOWN, (action, state) -> addbutton(action, virtualPad.buttonDown, state));
+			case LEFT_RIGHT:
+				inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, virtualPad.buttonLeft, state));
+				inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, virtualPad.buttonRight, state));
+			case UP_LEFT_RIGHT:
+				inline forEachBound(Control.UP, (action, state) -> addbutton(action, virtualPad.buttonUp, state));
+				inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, virtualPad.buttonLeft, state));
+				inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, virtualPad.buttonRight, state));
+			case FULL | RIGHT_FULL:
+				inline forEachBound(Control.UP, (action, state) -> addbutton(action, virtualPad.buttonUp, state));
+				inline forEachBound(Control.DOWN, (action, state) -> addbutton(action, virtualPad.buttonDown, state));
+				inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, virtualPad.buttonLeft, state));
+				inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, virtualPad.buttonRight, state));
+
+			case NONE:
+		}
+
+		switch (Action)
+		{
+			case A:
+				inline forEachBound(Control.ACCEPT, (action, state) -> addbutton(action, virtualPad.buttonA, state));
+			case A_B:
+				inline forEachBound(Control.ACCEPT, (action, state) -> addbutton(action, virtualPad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addbutton(action, virtualPad.buttonB, state));
+			case A_B_C:
+				inline forEachBound(Control.ACCEPT, (action, state) -> addbutton(action, virtualPad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addbutton(action, virtualPad.buttonB, state));
+			case A_B_X_Y:
+				inline forEachBound(Control.ACCEPT, (action, state) -> addbutton(action, virtualPad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addbutton(action, virtualPad.buttonB, state));
+			case NONE:
+		}
+	}
+
+
+	public function removeFlxInput(Tinputs) {
+		for (action in this.digitalActions)
+		{
+			var i = action.inputs.length;
+
+			while (i-- > 0)
+			{
+				var input = action.inputs[i];
+				/*if (input.device == IFLXINPUT_OBJECT)
+					action.remove(input);*/
+
+				var x = Tinputs.length;
+				while (x-- > 0)
+					if (Tinputs[x] == input)
+						action.remove(input);
+			}
+		}
+	}
+
+
+
+	#if android
+	public function addAndroidBack() {
+		// fix this later
+
+		/*
+		var BACK = #if (openfl >= "8.0.0") 0x4000010E #else 27 #end;
+		_back.addKey(BACK, JUST_RELEASED);
+		_back.addKey(BACK, JUST_PRESSED);
+		_back.addKey(BACK, PRESSED);
+		*/
+	}
+	#end
+
 
 	override function update()
 	{

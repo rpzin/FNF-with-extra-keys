@@ -188,6 +188,10 @@ class FreeplayState extends MusicBeatState
 			trace(md);
 		 */
 
+		 #if mobileC
+		 addVirtualPad(FULL, A_B);
+		 #end
+
 		super.create();
 	}
 
@@ -228,8 +232,8 @@ class FreeplayState extends MusicBeatState
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
 		comboText.text = combo + '\n';
 
-		var upP = FlxG.keys.justPressed.UP;
-		var downP = FlxG.keys.justPressed.DOWN;
+		var upP = controls.UP_P;
+		var downP = controls.DOWN;
 		var accepted = controls.ACCEPT;
 
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;

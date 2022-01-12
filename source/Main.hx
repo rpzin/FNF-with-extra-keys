@@ -12,6 +12,7 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import lime.system.System;
 
 class Main extends Sprite
 {
@@ -25,6 +26,8 @@ class Main extends Sprite
 	public static var editor:Bool = false;
 
 	public static var watermarks = true; // Whether to put Kade Engine liteartly anywhere
+
+	public static var path:String = System.applicationStorageDirectory;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -76,20 +79,20 @@ class Main extends Sprite
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 
-		#if cpp
-		initialState = Caching;
+
+		#if mobile
+		gameWidth = 1280;
+		gameHeight = 720;
+		zoom = 1;
+		#end		
+
 		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
-		#else
-		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
-		#end
 		addChild(game);
 		
-		#if !mobile
+
 		fpsCounter = new FPS(10, 3, 0xFFFFFF);
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
-
-		#end
 	}
 
 	var game:FlxGame;
