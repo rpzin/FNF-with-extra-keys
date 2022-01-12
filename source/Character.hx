@@ -17,7 +17,12 @@ class Character extends FlxSprite
 
 	public var holdTimer:Float = 0;
 
-	public var isPlayingAsBF:Bool;
+	function jointex(frames1:FlxAtlasFrames, frames2:FlxAtlasFrames) {
+		for (frame in frames2.frames){
+			frames1.pushFrame(frame);
+		}
+		return frames1;
+	}
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -27,16 +32,29 @@ class Character extends FlxSprite
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 
-		isPlayingAsBF = !FlxG.save.data.flip;
-
 		var tex:FlxAtlasFrames;
-		antialiasing = FlxG.save.data.antialiasing;
+		antialiasing = true;
 
 		switch (curCharacter)
 		{
 			case 'gf':
 				// GIRLFRIEND CODE
-				tex = Paths.getSparrowAtlas('characters/GF_assets');
+
+				var tex = Paths.getSparrowAtlas('characters/GF_assets');
+
+				switch PlayState.curStage.toLowerCase() {
+					case 'spooky':
+						tex = jointex(tex, Paths.getSparrowAtlas('characters/GF_assets_week2'));
+					case 'stage':
+						if (PlayState.SONG.song.toLowerCase() == 'tutorial')
+						{
+							tex = jointex(tex, Paths.getSparrowAtlas('characters/GF_assets_tutorial'));
+						}
+					case 'philly':
+						tex = jointex(tex, jointex(Paths.getSparrowAtlas('characters/GF_assets_blowing'), Paths.getSparrowAtlas('gf/GF_ass_sets_landing')));
+
+				}
+
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
@@ -66,8 +84,11 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 
-			case 'gf-christmas':
-				tex = Paths.getSparrowAtlas('characters/gfChristmas');
+			case 'gf-characters':
+				tex = Paths.getSparrowAtlas('characters/gfcharacters');
+
+				tex = jointex(tex, Paths.getSparrowAtlas('characters/gfcharacters_em'));
+
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
@@ -128,7 +149,7 @@ class Character extends FlxSprite
 
 			case 'dad':
 				// DAD ANIMATION LOADING CODE
-				tex = Paths.getSparrowAtlas('characters/DADDY_DEAREST', 'shared');
+				tex = Paths.getSparrowAtlas('characters/DADDY_DEAREST');
 				frames = tex;
 				animation.addByPrefix('idle', 'Dad idle dance', 24);
 				animation.addByPrefix('singUP', 'Dad Sing Note UP', 24);
@@ -216,8 +237,15 @@ class Character extends FlxSprite
 				addOffset("singLEFT", -30);
 				addOffset("singDOWN", -30, -40);
 				playAnim('idle');
-			case 'monster-christmas':
-				tex = Paths.getSparrowAtlas('characters/monsterChristmas');
+			case 'monster-characters':
+				tex = Paths.getSparrowAtlas('characters/monstercharacters');
+				
+				var tex2 = Paths.getSparrowAtlas('characters/monstercharacters2');
+				var tex3 = Paths.getSparrowAtlas('characters/monstercharacters3');
+
+
+				tex = jointex(tex, jointex(tex2, tex3));
+
 				frames = tex;
 				animation.addByPrefix('idle', 'monster idle', 24, false);
 				animation.addByPrefix('singUP', 'monster up note', 24, false);
@@ -271,11 +299,8 @@ class Character extends FlxSprite
 				flipX = true;
 
 			case 'bf':
-				var tex = Paths.getSparrowAtlas('characters/BOYFRIEND', 'shared');
+				var tex = Paths.getSparrowAtlas('characters/BOYFRIEND');
 				frames = tex;
-
-				trace(tex.frames.length);
-
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
 				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false);
@@ -286,8 +311,6 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 				animation.addByPrefix('hey', 'BF HEY', 24, false);
-				animation.addByPrefix('singHey', 'BF HEY', 24, false);
-				animation.addByPrefix('hit', 'BF hit', 24, false);
 
 				animation.addByPrefix('firstDeath', "BF dies", 24, false);
 				animation.addByPrefix('deathLoop', "BF Dead Loop", 24, true);
@@ -305,7 +328,6 @@ class Character extends FlxSprite
 				addOffset("singLEFTmiss", 12, 24);
 				addOffset("singDOWNmiss", -11, -19);
 				addOffset("hey", 7, 4);
-				addOffset("singHey", 7, 4);
 				addOffset('firstDeath', 37, 11);
 				addOffset('deathLoop', 37, 5);
 				addOffset('deathConfirm', 37, 69);
@@ -315,8 +337,8 @@ class Character extends FlxSprite
 
 				flipX = true;
 
-			case 'bf-christmas':
-				var tex = Paths.getSparrowAtlas('characters/bfChristmas');
+			case 'bf-characters':
+				var tex = Paths.getSparrowAtlas('characters/bfcharacters');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -328,7 +350,6 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 				animation.addByPrefix('hey', 'BF HEY', 24, false);
-				animation.addByPrefix('singHey', 'BF HEY', 24, false);
 
 				addOffset('idle', -5);
 				addOffset("singUP", -29, 27);
@@ -340,13 +361,12 @@ class Character extends FlxSprite
 				addOffset("singLEFTmiss", 12, 24);
 				addOffset("singDOWNmiss", -11, -19);
 				addOffset("hey", 7, 4);
-				addOffset("singHey", 7, 4);
 
 				playAnim('idle');
 
 				flipX = true;
 			case 'bf-car':
-				var tex = Paths.getSparrowAtlas('characters/bfCar');
+				var tex = Paths.getSparrowAtlas('charactersbfCar');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -482,9 +502,19 @@ class Character extends FlxSprite
 
 				antialiasing = false;
 
-			case 'parents-christmas':
-				frames = Paths.getSparrowAtlas('characters/mom_dad_christmas_assets');
-				animation.addByPrefix('idle', 'Parent Christmas Idle', 24, false);
+			case 'parents-characters':
+				var tex = Paths.getSparrowAtlas('characters/mom_dad_characters_assets');
+				var tex2 = Paths.getSparrowAtlas('characters/mom_dad_characters_assets2');
+				var tex3 = Paths.getSparrowAtlas('characters/mom_dad_characters_assets3');
+
+
+				tex = jointex(tex, jointex(tex2, tex3));
+				
+				frames = tex;
+				//setGraphicSize(Std.int(width * 2));
+				//updateHitbox();
+
+				animation.addByPrefix('idle', 'Parent characters Idle', 24, false);
 				animation.addByPrefix('singUP', 'Parent Up Note Dad', 24, false);
 				animation.addByPrefix('singDOWN', 'Parent Down Note Dad', 24, false);
 				animation.addByPrefix('singLEFT', 'Parent Left Note Dad', 24, false);
@@ -536,50 +566,24 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (!isPlayingAsBF)
+		if (!curCharacter.startsWith('bf'))
 		{
-			if (curCharacter.startsWith('bf') && !isPlayer)
-				{
-					if (animation.curAnim.name.startsWith('sing'))
-					{
-						holdTimer += elapsed;
-					}
-		
-					var dadVar:Float = 4;
-		
-					if (curCharacter == 'dad')
-						dadVar = 6.1;
-					if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
-					{
-						trace('dance');
-						dance();
-						holdTimer = 0;
-					}
-				}
-		
+			if (animation.curAnim.name.startsWith('sing'))
+			{
+				holdTimer += elapsed;
+			}
+
+			var dadVar:Float = 4;
+
+			if (curCharacter == 'dad')
+				dadVar = 6.1;
+			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
+			{
+				dance();
+				holdTimer = 0;
+			}
 		}
-		else
-		{
-			if (!isPlayer)
-				{
-					if (animation.curAnim.name.startsWith('sing'))
-					{
-						holdTimer += elapsed;
-					}
-		
-					var dadVar:Float = 4;
-		
-					if (curCharacter == 'dad')
-						dadVar = 6.1;
-					if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
-					{
-						trace('dance');
-						dance();
-						holdTimer = 0;
-					}
-				}
-		}
-		
+
 		switch (curCharacter)
 		{
 			case 'gf':
